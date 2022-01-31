@@ -4,9 +4,7 @@ The TompHTTP Bare Server is a server that will receive requests from a service w
 
 Bare Servers can run on directories. For example, if the directory was `/bare/` then the bare origin would look like `http://example.org/bare/`. The bare origin is passed to clients.
 
-## V1
-
-### Endpoints
+## Endpoints
 
 | Method | Endpoint  |
 | - | - |
@@ -22,12 +20,16 @@ Response Body:
 
 ```json
 {
-    "versions": [ "v1" ],
+    "versions": [
+		"v1"
+	],
     "language": "NodeJS",
     "memoryUsage": 1.04,
     "requestReceived": 1643596566477
 }
 ```
+
+body.versions: An array of Bare Server versions the server supports.
 
 body.language: The language the bare server is written in. This can be: JS,TS,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Bash
 
