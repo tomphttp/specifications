@@ -20,12 +20,12 @@ Response Body:
 
 ```json
 {
-    "versions": [
+	"versions": [
 		"v1"
 	],
-    "language": "NodeJS",
-    "memoryUsage": 1.04,
-    "requestReceived": 1643596566477
+	"language": "NodeJS",
+	"memoryUsage": 1.04,
+	"requestReceived": 1643596566477
 }
 ```
 
