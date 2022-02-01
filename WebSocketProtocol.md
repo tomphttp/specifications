@@ -1,5 +1,7 @@
 # WebSocket Protocol Encoding
 
+[Implementation](https://github.com/tomphttp/toomanyproxies/blob/master/Client/EncodeProtocol.mjs)
+
 This encoding is similar to URIComponent encoding.
 
 The `Sec-WebSocket-Protocol` header contains protocols. Protocol values have a [character set](#websocket-protocol-characters). In cases when TompHTTP requires characters outside this range in protocols, this encoding is used.
