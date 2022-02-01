@@ -91,3 +91,14 @@ x-bare-headers: A JSON-serialized object containing remote response headers. Res
 Response Body:
 
 The remote's response body will be sent as the response body.
+
+| Method | Endpoint  |
+| - | - |
+| `GET` | / |
+
+
+Request Headers:
+
+```
+Connection: upgrade
+```
