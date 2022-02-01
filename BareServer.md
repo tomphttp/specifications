@@ -6,7 +6,7 @@ Bare Servers can run on directories. For example, if the directory was `/bare/` 
 
 ## Endpoints
 
-### [v1 endpoints](./BareServerV1.md)
+- [V1 Endpoints](./BareServerV1.md)
 
 | Method | Endpoint  |
 | - | - |
