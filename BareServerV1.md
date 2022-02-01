@@ -2,6 +2,8 @@
 
 [Implementation](https://github.com/tomphttp/bare-server-node/blob/master/V1.mjs)
 
+## Request the server to fetch a URL from the remote.
+
 | Method | Endpoint  |
 | - | - |
 | `POST`/`GET` | /v1/ |
@@ -52,6 +54,8 @@ x-bare-headers: A JSON-serialized object containing remote response headers. Res
 Response Body:
 
 The remote's response body will be sent as the response body.
+
+## Request the server to create a WebSocket tunnel to the remote.
 
 | Method | Endpoint  |
 | - | - |
@@ -111,3 +115,7 @@ Sec-WebSocket-Accept: The remote's accept header.
 Sec-WebSocket-Protocol: The first value in the list of protocols the client sent.
 
 All headers that aren't listed above are irrelevant. The WebSocket class in browsers can't access response headers.
+
+Response Body:
+
+The response is a stream containing bytes from the remote socket. Once the remote closes, this stream closes. Once the client closes, the remote closes.
