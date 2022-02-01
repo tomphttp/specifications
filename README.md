@@ -6,7 +6,7 @@ TOMP (acronym for Too Many Proxies) is an organization containing new standards 
 
 ## Specs
 
-[Bare Server V1](./BareServerV1.md)
+[Bare Server](./BareServer.md)
 
 [Proxy Model](./ProxyModel.md)
 
