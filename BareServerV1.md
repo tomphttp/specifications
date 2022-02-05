@@ -118,7 +118,6 @@ The response is a stream containing bytes from the remote socket. Once the remot
 
 ## Request the metadata for a specific WebSocket
 
-
 | Method | Endpoint |
 | ------ | -------- |
 | `GET`  | /ws-meta |
@@ -130,6 +129,10 @@ x-bare-id: UniqueID_123
 ```
 
 - x-bare-id: The same unique ID specified in the protocol object when opening the WebSocket connection.
+
+> ⚠ All WebSocket metadata is cleared 30 seconds after the connection was established.
+
+An expired or invalid x-bare-id will result in a 400 status code.
 
 Response Headers:
 
