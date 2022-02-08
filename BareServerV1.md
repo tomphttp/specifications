@@ -62,10 +62,10 @@ Request Headers:
 
 ```
 Upgrade: websocket
-Sec-WebSocket-Protocol: ...
+Sec-WebSocket-Protocol: bare, ...
 ```
 
-- Sec-WebSocket-Protocol: This header contains 2 values: a dummy protocol to send to the client and an encoded, serialized, JSON object.
+- Sec-WebSocket-Protocol: This header contains 2 values: a dummy protocol named `bare` and an encoded, serialized, JSON object.
 
 The JSON object looks like:
 
