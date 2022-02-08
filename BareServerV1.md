@@ -39,11 +39,15 @@ All headers are required. Not specifying a header will result in a 400 status co
 Response Headers:
 
 ```
+content-encoding: ...
+content-length: ...
 x-bare-status: 200
 x-bare-status-text: OK
 x-bare-headers: {"Content-Type": "text/html"}
 ```
 
+- content-encoding: The remote body's content encoding.
+- content-encoding: The remote body's content length.
 - x-bare-status: The status code of the remote.
 - x-bare-status-text: The status text of the remote.
 - x-bare-headers: A JSON-serialized object containing remote response headers. Response headers may be capitalized if the remote sent any capitalized headers.
