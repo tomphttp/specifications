@@ -31,12 +31,11 @@ Response Body:
 	],
 	"language": "NodeJS",
 	"memoryUsage": 1.04,
-	"requestReceived": 1643596566477,
 	"maintainer": {
 		"email": "maintenance@example.org",
 		"website": "https://projects.example.org/"
 	},
-	"developer": {
+	"project": {
 		"name": "Project",
 		"description": "Unique TOMP implementation",
 		"email": "development@example.org",
@@ -46,19 +45,23 @@ Response Body:
 }
 ```
 
-- body.maintainer: An optional property containing the maintainer's information. This should be changable by the maintainer.
-- body.maintainer.email: An optional property containing the maintainer's email address.
-- body.maintainer.website: An optional property containing a link to the maintainer's website.
-- body.developer.name: An optional property containing the project's name.
-- body.developer.description: An optional property containing the project's description.
-- body.developer.email: An optional property containing the developers's email address.
-- body.developer.website: An optional property containing a link to the developer's website.
-- body.developer.repository: An optional property linking to the project's git file.
-- body.versions: An array of Bare Server versions the server supports.
-- body.language: The language the bare server is written in. This can be: JS,TS,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Bash
-- body.memoryUsage: The memory used by the bare server. This is used to rank servers.
-In NodeJS, this value should be calculated by:
+A ? after the property indicates it's optional.
+
+- maintainer {Object}?
+	- email {String}?
+	- website {String}?
+- project {Object}?: The project's information.
+	- name {String}?
+	- description {String}?
+	- email {String}?
+	- website {String}?
+	- repository {String}?: A link to the project's .git file.
+- versions {Array{String}}: A list of version names this server supports. (resolvable to http://server/versionName/)
+- language {String{JS,TS,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Bash}}
+- memoryUsage {Number}?: The memory used by the server.
+
+In NodeJS, memoryUsage should be calculated by:
+
 ```js
 Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100
 ```
-- body.requestReceived: The time the request to this endpoint was recieved in milliseconds as an integer. This is to check latency.
