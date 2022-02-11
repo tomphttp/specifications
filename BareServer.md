@@ -31,10 +31,29 @@ Response Body:
 	],
 	"language": "NodeJS",
 	"memoryUsage": 1.04,
-	"requestReceived": 1643596566477
+	"requestReceived": 1643596566477,
+	"maintainer": {
+		"email": "maintenance@example.org",
+		"website": "https://projects.example.org/"
+	},
+	"developer": {
+		"name": "Project",
+		"description": "Unique TOMP implementation",
+		"email": "development@example.org",
+		"website": "https://git.example.org/",
+		"repository": "https://git.example.org/dev/project.git"
+	}
 }
 ```
 
+- body.maintainer: An optional property containing the maintainer's information. This should be changable by the maintainer.
+- body.maintainer.email: An optional property containing the maintainer's email address.
+- body.maintainer.website: An optional property containing a link to the maintainer's website.
+- body.developer.name: An optional property containing the project's name.
+- body.developer.description: An optional property containing the project's description.
+- body.developer.email: An optional property containing the developers's email address.
+- body.developer.website: An optional property containing a link to the developer's website.
+- body.developer.repository: An optional property linking to the project's git file.
 - body.versions: An array of Bare Server versions the server supports.
 - body.language: The language the bare server is written in. This can be: JS,TS,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Bash
 - body.memoryUsage: The memory used by the bare server. This is used to rank servers.
