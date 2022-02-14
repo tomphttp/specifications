@@ -169,7 +169,7 @@ Response Body:
 			"Cookie",
 			"Cookie"
 		],
-		"Sec-WebSocket-Accept": "..."
+		"Sec-WebSocket-Accept": "original_websocket_protocol"
 	}
 }
 ```
