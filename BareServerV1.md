@@ -19,38 +19,38 @@ The body will be ignored if the request was made as `GET`. The request body will
 Request Headers:
 
 ```
-x-bare-host: example.org
-x-bare-port: 80
-x-bare-protocol: http:
-x-bare-path: /index.php
-x-bare-headers: {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
-x-bare-forward-headers: ["accept-encoding","accept-language"]
+X-Bare-Host: example.org
+X-Bare-Port: 80
+X-Bare-Protocol: http:
+X-Bare-Path: /index.php
+X-Bare-Headers: {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
+X-Bare-Forward-Headers: ["accept-encoding","accept-language"]
 ```
 
 All headers are required. Not specifying a header will result in a 400 status code. All headers are not tampered with, whatever is specified will go directly to the destination.
 
-- x-bare-host: The host of the destination WITHOUT the port. This would be equivalent to `URL.hostname` in JavaScript.
-- x-bare-port: The port of the destination. This must be a valid number. This is not `URL.port`, rather the client needs to determine what port a URL goes to. An example of logic done a the client: the protocol `http:` will go to port 80 if no port is specified in the URL.
-- x-bare-protocol: The protocol of the destination. V1 bare servers support `http:` and `https:`. If the protocol is not either, this will result in a 400 status code.
-- x-bare-path: The path of the destination. Be careful when specifying a path without `/` at the start. This may result in an error from the remote.
-- x-bare-headers: A JSON-serialized object containing request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
-- x-bare-forward-headers: A JSON-serialized array containing names of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, it will set x-bare-forwarded-headers to `["accept"]`. The Bare Server will read the `accept` header from the request headers (not x-bare-headers`) and add it to the headers sent to the remote.
+- X-Bare-Host: The host of the destination WITHOUT the port. This would be equivalent to `URL.hostname` in JavaScript.
+- X-Bare-Port: The port of the destination. This must be a valid number. This is not `URL.port`, rather the client needs to determine what port a URL goes to. An example of logic done a the client: the protocol `http:` will go to port 80 if no port is specified in the URL.
+- X-Bare-Protocol: The protocol of the destination. V1 bare servers support `http:` and `https:`. If the protocol is not either, this will result in a 400 status code.
+- X-Bare-Path: The path of the destination. Be careful when specifying a path without `/` at the start. This may result in an error from the remote.
+- X-Bare-Headers: A JSON-serialized object containing request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
+- X-Bare-Forward-Headers: A JSON-serialized array containing names of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, it will set X-Bare-Forwarded-Headers to `["accept"]`. The Bare Server will read the `accept` header from the request headers (not X-Bare-Headers`) and add it to the headers sent to the remote.
 
 Response Headers:
 
 ```
-content-encoding: ...
-content-length: ...
-x-bare-status: 200
-x-bare-status-text: OK
-x-bare-headers: {"Content-Type": "text/html"}
+Content-Encoding: ...
+Content-Length: ...
+X-Bare-Status: 200
+X-Bare-Status-text: OK
+X-Bare-Headers: {"Content-Type": "text/html"}
 ```
 
-- content-encoding: The remote body's content encoding.
-- content-encoding: The remote body's content length.
-- x-bare-status: The status code of the remote.
-- x-bare-status-text: The status text of the remote.
-- x-bare-headers: A JSON-serialized object containing remote response headers. Response headers may be capitalized if the remote sent any capitalized headers.
+- Content-Encoding: The remote body's content encoding.
+- Content-Encoding: The remote body's content length.
+- X-Bare-Status: The status code of the remote.
+- X-Bare-Status-Text: The status text of the remote.
+- X-Bare-Headers: A JSON-serialized object containing remote response headers. Response headers may be capitalized if the remote sent any capitalized headers.
 
 Response Body:
 
@@ -114,9 +114,9 @@ The JSON object looks like:
 
 This serialized JSON is then encoded. See [WebSocketProtocol.md](https://github.com/tomphttp/specifications/blob/master/WebSocketProtocol.md) for in-depth on this encoding.
 
-- body.remote: An object similar to `x-bare-` headers used when making a request.
-- body.headers: An object similar to `x-bare-headers`
-- body.forward_headers: An array similar to `x-bare-forward-headers`
+- body.remote: An object similar to `X-Bare-` headers used when making a request.
+- body.headers: An object similar to `X-Bare-headers`
+- body.forward_headers: An array similar to `X-Bare-Forward-Headers`. These are all lowercase but may reference capitalized headers.
 - body.id: The unique id generated by the server.
 
 Response Headers:
@@ -145,14 +145,14 @@ The response is a stream containing bytes from the remote socket. Once the remot
 Request Headers:
 
 ```
-x-bare-id: UniqueID_123
+X-Bare-ID: UniqueID_123
 ```
 
-- x-bare-id: The unique ID returned by the server in the pre-request.
+- X-Bare-ID: The unique ID returned by the server in the pre-request.
 
 > ⚠ All WebSocket metadata is cleared 30 seconds after the connection was established.
 
-An expired or invalid x-bare-id will result in a 400 status code.
+An expired or invalid X-Bare-ID will result in a 400 status code.
 
 Response Headers:
 
