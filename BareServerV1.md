@@ -123,7 +123,7 @@ Response Headers:
 
 ```
 Sec-WebSocket-Protocol: ...
-Sec-WebSocket-Accept: ...
+Sec-WebSocket-Accept: bare
 ```
 
 Sec-WebSocket-Accept: The remote's accept header.
