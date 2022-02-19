@@ -54,3 +54,15 @@ Error IDs are in `<object>?.<key>` format.
 ### Keys
 
 Keys are optional. The object could be `request.headers` and this will reference the headers, not any in specific. `request.headers.host` will refer to the host header.
+
+### Example of keys
+
+- `request.headers.x-bare-headers`
+	- Object: `request.headers`
+	- Key: `x-bare-headers`
+- `bare.headers.x-custom_header`
+	- Object: `bare.headers`
+	- Key: `x-custom_header`
+- `bare.headers.x-custom.header.a`
+	- Object: `bare.headers`
+	- Key: `x-custom.header.a`
