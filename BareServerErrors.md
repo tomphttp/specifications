@@ -27,7 +27,7 @@ A ? after the property indicates it's optional.
 ## Error Codes
 
 - `UNKNOWN`: The Bare Server could not identify the cause of the issue. This error is a fallback.
-- `MISSING_HEADER`: The request did not include a required header. `error.id` will contain the expected header.
+- `MISSING_BARE_HEADER`: The request did not include a required bare header such as X-Bare-Host. `error.id` will contain the expected header.
 - `INVALID_BARE_HEADER`: A header such as X-Bare-Port contained an unparsable/invalid value.
 - `INVALID_HEADER`: The Bare Server's HTTP implementation forbids a header value. `error.id` will contain the expected header.
 - `HOST_NOT_FOUND`: The DNS lookup for the host failed.
