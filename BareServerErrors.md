@@ -23,7 +23,6 @@ A ? after the property indicates it's optional.
 - id {String}
 - message {String}?
 
-
 ## Error Codes
 
 - `UNKNOWN`: The Bare Server could not identify the cause of the issue. This error is a fallback.
@@ -45,6 +44,9 @@ Error IDs are in `<object>?.<key>` format.
 - `request`: The client's HTTP implementation.
 - `request.headers`
 - `request.body` {No key}
+- `bare`: The Bare fields provided by the request headers.
+- `bare.headers`
+- `bare.forward_headers`
 - `response`: The remote's HTTP implementation.
 - `response.headers`
 - `response.body` {No key}
