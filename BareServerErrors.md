@@ -25,7 +25,7 @@ A ? after the property indicates it's optional.
 
 ## Error Codes
 
-Error codes prefixed with `IMPL_` are not part of this specification. They are up to the implementer to decide what the code represents.
+Error codes prefixed with `IMPL_` are not part of this specification. The implementer decides what the code represents.
 
 - `UNKNOWN` {500}: The Bare Server could not identify the cause of the issue. This error is a fallback.
 - `MISSING_BARE_HEADER` {400}: The request did not include a required bare header such as X-Bare-Host. `error.id` will contain the expected header.
