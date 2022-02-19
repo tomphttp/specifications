@@ -28,6 +28,7 @@ A ? after the property indicates it's optional.
 
 - `UNKNOWN`: The Bare Server could not identify the cause of the issue. This error is a fallback.
 - `MISSING_HEADER`: The request did not include a required header. `error.id` will contain the expected header.
+- `INVALID_BARE_HEADER`: A header such as X-Bare-Port contained an unparsable/invalid value.
 - `INVALID_HEADER`: The Bare Server's HTTP implementation forbids a header value. `error.id` will contain the expected header.
 - `HOST_NOT_FOUND`: The DNS lookup for the host failed.
 - `CONNECTION_RESET`: The connection to the remote was closed before receving the response headers. This occurs after connecting to the socket or after sending the request headers.
