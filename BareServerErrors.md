@@ -40,6 +40,7 @@ Error IDs are in `<object>?.<key>` format.
 
 ### Objects
 
+- `unknown` 
 - `request`: The client's HTTP implementation.
 - `request.headers`
 - `request.body` {No key}
