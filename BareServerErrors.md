@@ -22,6 +22,7 @@ A ? after the property indicates it's optional.
 - code {String}
 - id {String}
 - message {String}?
+- stack {String}?: An optional stack trace.
 
 ## Error Codes
 
@@ -42,6 +43,7 @@ Error IDs are in `<object>?.<key>` format.
 
 ### Objects
 
+- `error`: A container for types such as TypeError,Error,SyntaxError
 - `unknown` 
 - `request`: The client's HTTP implementation.
 - `request.headers`
