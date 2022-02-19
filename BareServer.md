@@ -6,6 +6,7 @@ The TompHTTP Bare Server is a server that will receive requests from a service w
 
 Bare Servers can run on directories. For example, if the directory was `/bare/` then the bare origin would look like `http://example.org/bare/`. The bare origin is passed to clients.
 
+- [Errors](./BareServerErrors.md)
 - [V1 Endpoints](./BareServerV1.md)
 
 ## Request server info
