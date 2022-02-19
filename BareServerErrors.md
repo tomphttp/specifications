@@ -43,7 +43,7 @@ Error IDs are in `<object>?.<key>` format.
 
 ### Objects
 
-- `error`: A container for types such as TypeError,Error,SyntaxError
+- `error`: A container for types such as Exception,TypeError,Error,SyntaxError
 - `unknown` 
 - `request`: The client's HTTP implementation.
 - `request.headers`
