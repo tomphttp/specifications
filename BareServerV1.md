@@ -64,6 +64,12 @@ A random character sequence used to identify the WebSocket and it's metadata.
 | ------ | ------------ |
 | `GET`  | /ws-new-meta |
 
+Response Headers:
+
+```
+Content-Type: text/plain
+```
+
 Response Body:
 
 The response is a unique sequence of hex encoded bytes.
