@@ -1,6 +1,6 @@
 # WebSocket Protocol Encoding
 
-[Implementation](https://github.com/tomphttp/specifications/blob/master/EncodeProtocol.mjs)
+[Implementation](https://github.com/tomphttp/specifications/blob/master/encodeProtocol.mjs)
 
 This encoding is similar to URIComponent encoding.
 
