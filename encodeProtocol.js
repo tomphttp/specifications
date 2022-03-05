@@ -1,8 +1,8 @@
 const valid_chars = "!#$%&'*+-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz|~";
 const reserved_chars = "%";
 
-export function valid_protocol(protocol){
-	protocol = String(protocol);
+export function validProtocol(protocol){
+	protocol = protocol.toString();
 
 	for(let i = 0; i < protocol.length; i++){
 		const char = protocol[i];
@@ -15,8 +15,8 @@ export function valid_protocol(protocol){
 	return true;
 }
 
-export function encode_protocol(protocol){
-	protocol = String(protocol);
+export function encodeProtocol(protocol){
+	protocol = protocol.toString();
 
 	let result = '';
 	
@@ -34,7 +34,7 @@ export function encode_protocol(protocol){
 	return result;
 }
 
-export function decode_protocol(protocol){
+export function decodeProtocol(protocol){
 	if(typeof protocol != 'string')throw new TypeError('protocol must be a string');
 
 	let result = '';
