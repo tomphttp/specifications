@@ -71,8 +71,6 @@ Sec-WebSocket-Protocol: bare
 
 Sec-WebSocket-Protocol: The first value in the list of protocols the client sent.
 
-All headers that aren't listed above are irrelevant. The WebSocket class in browsers can't access response headers.
-
 Response Body:
 
 The response is a stream, forwading bytes from the remote to the client. Once either the remote or client close, the remote and client will close.
