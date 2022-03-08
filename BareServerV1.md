@@ -140,7 +140,7 @@ All headers that aren't listed above are irrelevant. The WebSocket class in brow
 
 Response Body:
 
-The response is a stream containing bytes from the remote socket. Once the remote closes, this stream closes. Once the client closes, the remote closes.
+The response is a stream, forwading bytes from the remote to the client. Once either the remote or client close, the remote and client will close.
 
 ## Request the metadata for a specific WebSocket
 
