@@ -1,7 +1,5 @@
 # Proxy Model
 
-- [Implementation](https://github.com/tomphttp/toomanyproxies)
-
 The TompHTTP Proxy Model has 3 components: The Bare Server, Client, and Service Worker.
 
 ## The client's job:

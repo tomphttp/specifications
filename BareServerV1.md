@@ -1,7 +1,5 @@
 # Bare Server V1 Endpoints
 
-[Implementation](https://github.com/tomphttp/bare-server-node/blob/master/V1.mjs)
-
 All endpoints are prefixed with `/v{version}/`
 
 The endpoint `/` on V1 would be `/v1/`

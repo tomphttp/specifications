@@ -1,7 +1,5 @@
 # Bare Server
 
-- [Implementation](https://github.com/tomphttp/bare-server-node/blob/master/Server.mjs)
-
 The TompHTTP Bare Server is a server that will receive requests from a service worker (or any client) and forward a request to the specified URL.
 
 Bare Servers can run on directories. For example, if the directory was `/bare/` then the bare origin would look like `http://example.org/bare/`. The bare origin is passed to clients.
