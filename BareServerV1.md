@@ -128,7 +128,6 @@ This serialized JSON is then encoded. See [WebSocketProtocol.md](https://github.
 Response Headers:
 
 ```
-Sec-WebSocket-Protocol: ...
 Sec-WebSocket-Accept: bare
 ```
 
