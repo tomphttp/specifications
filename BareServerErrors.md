@@ -31,6 +31,7 @@ Error codes prefixed with `IMPL_` are not part of this specification. The implem
 - `UNKNOWN` {500}: The Bare Server could not identify the cause of the issue. This error is a fallback.
 - `MISSING_BARE_HEADER` {400}: The request did not include a required bare header such as X-Bare-Host. `error.id` will contain the expected header.
 - `INVALID_BARE_HEADER` {400}: A header such as X-Bare-Port contained an unparsable/invalid value.
+- `FORBIDDEN_BARE_HEADER` {403}: A header such as X-Bare-Pass-Headers contained a forbidden value.
 - `INVALID_HEADER` {400}: The Bare Server's HTTP implementation forbids a header value. `error.id` will contain the expected header.
 - `HOST_NOT_FOUND` {500}: The DNS lookup for the host failed.
 - `CONNECTION_RESET` {500}: The connection to the remote was closed before receving the response headers. This occurs after connecting to the socket or after sending the request headers.
