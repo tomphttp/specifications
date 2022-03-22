@@ -154,7 +154,7 @@ Request Headers:
 
 ```
 Upgrade: websocket
-Sec-WebSocket-Protocol: bare
+Sec-WebSocket-Protocol: bare, ...
 ```
 
 Response Headers:
@@ -163,7 +163,7 @@ Response Headers:
 Sec-WebSocket-Protocol: bare
 ```
 
-Sec-WebSocket-Protocol: The first value in the list of protocols the client sent.
+Sec-WebSocket-Protocol: The first protocol is bare. The second protocol is the encoded meta ID. See [WebSocketProtocol.md](https://github.com/tomphttp/specifications/blob/master/WebSocketProtocol.md) for this encoding.
 
 Response Body:
 
