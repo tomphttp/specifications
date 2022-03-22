@@ -6,7 +6,7 @@ The endpoint `/` on V2 would be `/v2/`
 
 ## Split Headers
 
-Due to very common webservers forbidding very long header values, headers on V2 will be split into smaller parts. If a `x-bare-` header value is over 2096 Bytes, **do not expect a response from the server**. If the server receives the large header, it will send a a [`INVALID_BARE_HEADER`](./BareServerErrors.md) error. If the server doesn't receive the header, the response may vary in status codes depending on the server.
+Due to very common webservers forbidding very long header values, headers on V2 will be split into smaller parts. If a `x-bare-` header value is over **3072** Bytes (3.5 KB), **do not expect a response from the server**. If the server receives the large header, it will send a a [`INVALID_BARE_HEADER`](./BareServerErrors.md) error. If the server doesn't receive the header, the response may vary in status codes depending on the server.
 
 Example:
 
