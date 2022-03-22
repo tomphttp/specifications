@@ -126,10 +126,6 @@ All `X-Bare-` headers are required. Not specifying a header will result in a 400
 - X-Bare-Headers: A JSON-serialized object containing request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
 - X-Bare-Forward-Headers: A JSON-serialized array containing names of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, it will set X-Bare-Forwarded-Headers to `["accept"]`. The Bare Server will read the `accept` header from the request headers (not X-Bare-Headers`) and add it to the headers sent to the remote. The server will automatically forward the following headers: Content-Encoding, Content-Length, Transfer-Encoding
 
-### New in V2:
-- X-Bare-Pass-Headers: A JSON-serialized array containing lowercase header names. The server will read these headers in the remote response and send them in the response. If a header is [forbidden](#forbidden-headers), the server will send a [`FORBIDDEN_BARE_HEADER`](./BareServerErrors.md) error.
-- X-Bare-Pass-Status: A JSON-serialized array containing status codes. The server will read the status code in the remote response and set the status to the remote's status code if it matches one of the status codes in this header.
-
 Response Headers:
 
 ```
