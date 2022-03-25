@@ -48,7 +48,7 @@ Cache:
 
 X-Bare-Forward-Headers:
 
-`accept-encoding`, `accept-language`
+`accept-encoding`, `accept-language`, `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
 
 Cache:
 
@@ -60,16 +60,9 @@ Cache:
 
 `304`
 
-## Send and receive data from a remote
+## Bare Request Headers
 
-| Method | Endpoint   |
-| ------ | ---------- |
-| `*`    | /          |
-
-Request Body:
-
-Request Headers:
-
+Example:
 ```
 X-Bare-Port: 80
 X-Bare-Protocol: http:
@@ -85,7 +78,7 @@ X-Bare-Headers: {"Host":"example.org","Accept":"text/html,application/xhtml+xml,
 - **Optional:** X-Bare-Pass-Headers: A [list](#header-lists) of case-insensitive headers. If these headers are present in the remote response, the values will be added to the server response.
 - **Optional:** X-Bare-Pass-Status: A [list](#header-lists) of HTTP status codes. If the remote response status code is present in this list, the server response status will be set to the remote response status.
 
-Response Headers:
+## Bare Response Headers
 
 ```
 Cache-Control: ...
@@ -103,11 +96,25 @@ X-Bare-Headers: {"Content-Type": "text/html"}
 - X-Bare-Status-Text: The status text of the remote.
 - X-Bare-Headers: A JSON-serialized object containing remote response headers. Response headers may be capitalized if the remote sent any capitalized headers.
 
+## Send and receive data from a remote
+
+| Method | Endpoint   |
+| ------ | ---------- |
+| `*`    | /          |
+
+Request Body:
+
+Request Headers:
+
+See [Bare Request Headers](#bare-request-headers)
+
+Response Headers:
+
+See [Bare Response Headers](#bare-response-headers)
+
 Response Body:
 
 The remote's response body will be sent as the response body.
-
-A random character sequence used to identify the WebSocket and it's metadata. 
 
 ## Request a new WebSocket ID
 
@@ -117,27 +124,16 @@ Request headers are almost identical to `/` with the exception of protocol.
 | ------ | ------------ |
 | `GET`  | /ws-new-meta |
 
-Request Headers:
+See [Bare Request Headers](#bare-request-headers)
 
+Example:
 ```
 X-Bare-Host: example.org
 X-Bare-Port: 80
 X-Bare-Protocol: ws:
 X-Bare-Path: /websocket
 X-Bare-Headers: {"Host":"example.org","Upgrade":"WebSocket","Origin":"http://example.org","Connection":"upgrade"}
-X-Bare-Forward-Headers: ["accept-encoding","accept-language","sec-websocket-extensions","sec-websocket-key","sec-websocket-version"]
-X-Bare-Pass-Headers: []
-X-Bare-Pass-Status: []
 ```
-
-All `X-Bare-` headers are required. Not specifying a header will result in a 400 status code. All headers are not tampered with, whatever is specified will go directly to the destination.
-
-- X-Bare-Host: The host of the destination WITHOUT the port. This would be equivalent to `URL.hostname` in JavaScript.
-- X-Bare-Port: The port of the destination. This must be a valid number. This is not `URL.port`, rather the client needs to determine what port a URL goes to. An example of logic done a the client: the protocol `http:` will go to port 80 if no port is specified in the URL.
-- X-Bare-Protocol: The protocol of the destination. V1,1 Bare Servers support `ws:` and `wss:`. If the protocol is not either, this will result in a 400 status code.
-- X-Bare-Path: The path of the destination. Be careful when specifying a path without `/` at the start. This may result in an error from the remote.
-- X-Bare-Headers: A JSON-serialized object containing request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
-- [X-Bare-Forward-Headers]: **Optional**; A JSON-serialized array containing names of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, it will set X-Bare-Forwarded-Headers to `["accept"]`. The Bare Server will read the `accept` header from the request headers (not X-Bare-Headers`) and add it to the headers sent to the remote. The server will automatically forward the following headers: Content-Encoding, Content-Length, Transfer-Encoding
 
 Response Headers:
 
@@ -147,7 +143,7 @@ Content-Type: text/plain
 
 Response Body:
 
-The response is a unique sequence of hex encoded bytes. This should be stored until the WebSocket is open.
+A random character sequence used to identify the WebSocket and it's metadata. 
 
 ```
 ABDCFE009023
@@ -164,12 +160,8 @@ Request Headers:
 ```
 Upgrade: websocket
 Sec-WebSocket-Protocol: bare, ...
-```
+All `X-Bare-` headers are required. Not specifying a header will result in a 400 status code. All headers are not tampered with, whatever is specified will go directly to the destination.
 
-Response Headers:
-
-```
-Sec-WebSocket-Protocol: bare
 ```
 
 Sec-WebSocket-Protocol: The first protocol is bare. The second protocol is the encoded meta ID. See [WebSocketProtocol.md](https://github.com/tomphttp/specifications/blob/master/WebSocketProtocol.md) for this encoding.
@@ -198,7 +190,4 @@ An expired or invalid X-Bare-ID will result in a 400 status code.
 
 Response Headers:
 
-```
-Content-Type: application/json
-X-Bare-Headers: ...
-```
+See [Bare Response Headers](#bare-response-headers)
