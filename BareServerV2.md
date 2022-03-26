@@ -162,8 +162,6 @@ Request Headers:
 ```
 Upgrade: websocket
 Sec-WebSocket-Protocol: bare, ...
-All `X-Bare-` headers are required. Not specifying a header will result in a 400 status code. All headers are not tampered with, whatever is specified will go directly to the destination.
-
 ```
 
 Sec-WebSocket-Protocol: The first protocol is bare. The second protocol is the encoded meta ID. See [WebSocketProtocol.md](https://github.com/tomphttp/specifications/blob/master/WebSocketProtocol.md) for this encoding.
