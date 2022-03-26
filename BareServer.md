@@ -27,7 +27,8 @@ Response Body:
 ```json
 {
 	"versions": [
-		"v1"
+		"v1",
+		"v2"
 	],
 	"language": "NodeJS",
 	"memoryUsage": 1.04,
