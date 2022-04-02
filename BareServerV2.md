@@ -145,7 +145,7 @@ Content-Type: text/plain
 
 Response Body:
 
-A random character sequence used to identify the WebSocket and it's metadata. 
+A random WebSocket-protocol-safe character sequence used to identify the WebSocket and it's metadata. 
 
 ```
 ABDCFE009023
@@ -164,7 +164,7 @@ Upgrade: websocket
 Sec-WebSocket-Protocol: bare, ...
 ```
 
-Sec-WebSocket-Protocol: The first protocol is bare. The second protocol is the encoded meta ID. See [WebSocketProtocol.md](https://github.com/tomphttp/specifications/blob/master/WebSocketProtocol.md) for this encoding.
+Sec-WebSocket-Protocol: The protocol is the meta ID. 
 
 Response Body:
 
