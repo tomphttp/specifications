@@ -8,6 +8,30 @@ Bare Servers can run on directories. For example, if the directory was `/bare/` 
 - [V1 Endpoints](./BareServerV1.md)
 - [V2 Endpoints](./BareServerV2.md)
 
+# Considerations when running an implementation under NGINX, Apache2, or Lighttpd
+
+Due to the nature of header values being large, you must configure your web server to allow these large headers.
+
+NGINX:
+```
+server {
+	# ...
+	# Upgrade WebSockets
+	proxy_set_header Upgrade $http_upgrade;
+	proxy_set_header Connection 'Upgrade';
+	# Increase header buffer
+	proxy_connect_timeout 10;
+	proxy_send_timeout 90;
+	proxy_read_timeout 90;
+	proxy_buffer_size 128k;
+	proxy_buffers 4 256k;
+	proxy_busy_buffers_size 256k;
+	proxy_temp_file_write_size 256k;
+	# proxy_pass http://localhost:8001;
+	# ...
+}
+```
+
 ## Request server info
 
 | Method | Endpoint  |
