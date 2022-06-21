@@ -18,6 +18,10 @@ Creating specifications allows for productivity. One developer can implement the
 
 [WebSocket Protocol](./WebSocketProtocol.md)
 
+## Planning
+
+Although we take issues and pull requests, a lot of planning for new specifications happens in our [Discord server](https://discord.gg/6m9saxJQPh).
+
 ## List of implementations
 
 https://github.com/tomphttp/implementations
