@@ -184,7 +184,7 @@ X-Bare-ID: UniqueID_123
 
 - X-Bare-ID: The unique ID returned by the server in the pre-request.
 
-> ⚠ All WebSocket metadata is cleared 30 seconds after the connection was established.
+> ⚠ All WebSocket metadata is cleared after requesting the metadata or 30 seconds after the connection was established.
 
 An expired or invalid X-Bare-ID will result in a 400 status code.
 
