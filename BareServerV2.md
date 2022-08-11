@@ -32,7 +32,7 @@ The receiver should iterate over the headers, sort by ID, then combine all the v
 
 X-Bare-Forward-Headers:
 
-`connection`, `transfer-encoding', 'host', 'connection', 'origin', 'referer`
+`connection`, `transfer-encoding`, `host`, `connection`, `origin`, `referer`
 
 X-Bare-Pass-Headers:
 
