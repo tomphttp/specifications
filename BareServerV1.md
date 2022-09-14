@@ -25,7 +25,7 @@ X-Bare-Headers: {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9
 X-Bare-Forward-Headers: ["accept-encoding","accept-language"]
 ```
 
-All headers are required. Not specifying a header will result in a 400 status code. All headers are not tampered with, whatever is specified will go directly to the destination.
+The headers below are required. Not specifying a header will result in a 400 status code. All headers are not tampered with, whatever is specified will go directly to the destination.
 
 - X-Bare-Host: The host of the destination WITHOUT the port. This would be equivalent to `URL.hostname` in JavaScript.
 - X-Bare-Port: The port of the destination. This must be a valid number. This is not `URL.port`, rather the client needs to determine what port a URL goes to. An example of logic done a the client: the protocol `http:` will go to port 80 if no port is specified in the URL.
@@ -33,6 +33,12 @@ All headers are required. Not specifying a header will result in a 400 status co
 - X-Bare-Path: The path of the destination. Be careful when specifying a path without `/` at the start. This may result in an error from the remote.
 - X-Bare-Headers: A JSON-serialized object containing request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
 - X-Bare-Forward-Headers: A JSON-serialized array containing names of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, it will set X-Bare-Forwarded-Headers to `["accept"]`. The Bare Server will read the `accept` header from the request headers (not X-Bare-Headers`) and add it to the headers sent to the remote. The server will automatically forward the following headers: Content-Encoding, Content-Length, Transfer-Encoding
+
+The headers below are optional and will default to `[]` if they are not specified. They are intended to be used for caching purposes.
+
+- X-Bare-Pass-Headers: A JSON-serialized array of case-insensitive headers. If these headers are present in the remote response, the values will be added to the server response.
+The list must not include the following: `vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`.
+- X-Bare-Pass-Status: A JSON-serialized array of HTTP status codes, like 204 and 304. If the remote response status code is present in this list, the server response status will be set to the remote response status.
 
 Response Headers:
 
