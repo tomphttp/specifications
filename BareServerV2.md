@@ -36,7 +36,7 @@ X-Bare-Forward-Headers:
 
 X-Bare-Pass-Headers:
 
-`vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-cntrol-request-headers`, `access-control-request-method`
+`vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`
 
 ## Default values
 
