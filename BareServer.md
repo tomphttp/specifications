@@ -82,7 +82,7 @@ A ? after the property indicates it's optional.
 	- website {String}?
 	- repository {String}?: A link to the project's .git file.
 - versions {Array{String}}: A list of version names this server supports. (resolvable to http://server/versionName/)
-- language {String{NodeJS,Deno,Bun,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Bash}}
+- language {String{NodeJS,Deno,Bun,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Bash}}: The runtime. "language" is kept for legacy purposes
 - memoryUsage {Number}?: The memory used by the server in base MB.
 
 In NodeJS, memoryUsage should be calculated by:
