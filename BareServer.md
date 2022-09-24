@@ -81,6 +81,7 @@ A ? after the property indicates it's optional.
 	- email {String}?
 	- website {String}?
 	- repository {String}?: A link to the project's .git file.
+	- version {String}?: The version of this project's backend.
 - versions {Array{String}}: A list of version names this server supports. (resolvable to http://server/versionName/)
 - language {String{NodeJS,Deno,Bun,ServiceWorker,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Shell}}: The runtime. "language" is kept for legacy purposes
 - memoryUsage {Number}?: The memory used by the server in base MB.
