@@ -1,5 +1,5 @@
 import {deepEqual} from "node:assert/strict"
-import {compactEncode, compactDecode} from "./index.js"
+import {compactEncode, compactDecode} from "./index.mjs"
 
 const ensureUnchanged = data => {
     console.log("Original:", data)
