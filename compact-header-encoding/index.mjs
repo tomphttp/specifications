@@ -52,14 +52,17 @@ const CHE_HEADER_ID_MIN_BYTE = 0b0101_0000
  */
 const CHE_BYTE_RANGE = CHE_MAX_BYTE - CHE_MIN_BYTE + 1
 
-/** The maximum header name length */
-const CHE_HEADER_NAME_LENGTH_MAX = CHE_HEADER_ID_MIN_BYTE - CHE_MIN_BYTE
+/** The maximum header name length in Compact Header Encoding */
+export const CHE_HEADER_NAME_LENGTH_MAX = CHE_HEADER_ID_MIN_BYTE - CHE_MIN_BYTE
 
-/** The maximum header ID */
-const CHE_HEADER_ID_MAX = CHE_MAX_BYTE - CHE_HEADER_ID_MIN_BYTE
+/** The maximum header ID in Compact Header Encoding */
+export const CHE_HEADER_ID_MAX = CHE_MAX_BYTE - CHE_HEADER_ID_MIN_BYTE
 
-/** The maximum header value length */
-const CHE_HEADER_VALUE_LENGTH_MAX = CHE_BYTE_RANGE ** 2 - 1
+/** The maximum header value length in the first length byte in Compact Header Encoding */
+const CHE_HEADER_VALUE_LENGTH_FIRST_MAX = (CHE_BYTE_RANGE >> 1) - 1
+
+/** The maximum header value length in Compact Header Encoding */
+export const CHE_HEADER_VALUE_LENGTH_MAX = CHE_HEADER_VALUE_LENGTH_FIRST_MAX * CHE_BYTE_RANGE + CHE_BYTE_RANGE - 1
 
 /**
  * Read a byte for lengths and header IDs and check if it lies within the allowed bounds for Compact Header Encoding
@@ -102,12 +105,12 @@ export function compactDecode(encoded) {
             name = nameInfo - CHE_HEADER_ID_MIN_BYTE
         }
 
-        // This calculation can be seen as a two-digit base CHE_BYTE_RANGE number
-        // Note: header values can apparently be empty, hence the lack of a `+ 1`
-        // Note: a Varint-like encoding could be used, but this approach is simpler
-        const valueLengthLower = readByte(encoded, i++) - CHE_MIN_BYTE
-        const valueLengthUpper = readByte(encoded, i++) - CHE_MIN_BYTE
-        const valueLength = valueLengthUpper * CHE_BYTE_RANGE + valueLengthLower
+        const valueFirstByte = readByte(encoded, i++) - CHE_MIN_BYTE
+        let valueLength = valueFirstByte >> 1
+        if (valueFirstByte & 1) {
+            const valueSecondByte = readByte(encoded, i++) - CHE_MIN_BYTE
+            valueLength = valueLength * CHE_BYTE_RANGE + valueSecondByte
+        }
         const valueEnd = i + valueLength
 
         ok(valueEnd <= encoded.length, "End of header value exceeds the string length")
@@ -147,10 +150,16 @@ export function compactEncode(data) {
 
         ok(value.length <= CHE_HEADER_VALUE_LENGTH_MAX, "Header value length exceeds maximum length")
 
-        const valueLengthLower = CHE_MIN_BYTE + (value.length % CHE_BYTE_RANGE    )
-        const valueLengthUpper = CHE_MIN_BYTE + (value.length / CHE_BYTE_RANGE | 0)
+        if (value.length > CHE_HEADER_VALUE_LENGTH_FIRST_MAX) {
+            const valueLengthFirstRaw = ((value.length / CHE_BYTE_RANGE | 0) << 1) | 1
+            const valueLengthFirst = CHE_MIN_BYTE + valueLengthFirstRaw
+            const valueLengthSecond = CHE_MIN_BYTE + (value.length % CHE_BYTE_RANGE)
+            encoded += String.fromCharCode(valueLengthFirst, valueLengthSecond)
+        } else {
+            const valueLength = CHE_MIN_BYTE + (value.length << 1)
+            encoded += String.fromCharCode(valueLength)
+        }
 
-        encoded += String.fromCharCode(valueLengthLower, valueLengthUpper)
         encoded += value
     }
 
