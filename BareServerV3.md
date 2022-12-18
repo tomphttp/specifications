@@ -55,7 +55,7 @@ Example:
 X-Bare-Port: 80
 X-Bare-Protocol: http:
 X-Bare-Path: /index.php
-X-Bare-Headers: TODO
+X-Bare-Headers: ;#Host+ example.org%Accept=!text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
 ```
 
 - X-Bare-Port: The port of the destination. This must be a valid number and cannot be empty. An example of logic the client must do is: `const port = protocol == "http:" ? 80 : 443;`
@@ -75,7 +75,7 @@ Content-Encoding: ...
 Content-Length: ...
 X-Bare-Status: 200
 X-Bare-Status-text: OK
-X-Bare-Headers: TODO
+X-Bare-Headers: ;+Content-Type) text/html
 ```
 
 - Content-Encoding: The remote body's content encoding.
