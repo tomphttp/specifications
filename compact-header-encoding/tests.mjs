@@ -31,6 +31,6 @@ for (;;) {
 }
 
 equal(error.message, "Header value length exceeds maximum length", error)
-equal(i, 4465, "Error was thrown on an unexpected header value length")
+equal(i, 212110 + 1, "Error was thrown on an unexpected header value length")
 
 // TODO: More tests
