@@ -45,12 +45,8 @@ const CHE_HEADER_NAME_LENGTH_MAX_BYTE = 0b0100_1111
  */
 const CHE_HEADER_ID_MIN_BYTE = 0b0101_0000
 
-/**
- * The number of values between {@link CHE_MIN_BYTE} and {@link CHE_MAX_BYTE}
- *
- * Used for calculating header value lengths
- */
-const CHE_BYTE_RANGE = CHE_MAX_BYTE - CHE_MIN_BYTE + 1
+/** The distance between {@link CHE_MIN_BYTE} and {@link CHE_MAX_BYTE} */
+const CHE_BYTE_RANGE = CHE_MAX_BYTE - CHE_MIN_BYTE
 
 /** The maximum header name length in Compact Header Encoding */
 export const CHE_HEADER_NAME_LENGTH_MAX = CHE_HEADER_ID_MIN_BYTE - CHE_MIN_BYTE
@@ -58,11 +54,31 @@ export const CHE_HEADER_NAME_LENGTH_MAX = CHE_HEADER_ID_MIN_BYTE - CHE_MIN_BYTE
 /** The maximum header ID in Compact Header Encoding */
 export const CHE_HEADER_ID_MAX = CHE_MAX_BYTE - CHE_HEADER_ID_MIN_BYTE
 
-/** The maximum header value length in the first length byte in Compact Header Encoding */
-const CHE_HEADER_VALUE_LENGTH_FIRST_MAX = (CHE_BYTE_RANGE >> 1) - 1
+/** The maximum header value length in the first/second length bytes in Compact Header Encoding */
+const CHE_HEADER_VALUE_LENGTH_TAGGED_MAX = (CHE_BYTE_RANGE >> 1 & 0b1111_1110) | (CHE_BYTE_RANGE & 1)
+
+/** The maximum header value length that fits within one byte in Compact Header Encoding */
+const CHE_HEADER_VALUE_LENGTH_ONE_MAX = CHE_HEADER_VALUE_LENGTH_TAGGED_MAX
+
+/** The maximum header value length that fits within two bytes in Compact Header Encoding */
+const CHE_HEADER_VALUE_LENGTH_TWO_MAX = (
+    // We can use this space more wisely by eliminating redundancy.
+    (CHE_HEADER_VALUE_LENGTH_ONE_MAX + 1) +
+    // This is essentially two-digit base 47 math, as each digit can range from 0 to 46.
+    (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX * (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) + CHE_HEADER_VALUE_LENGTH_TAGGED_MAX)
+)
 
 /** The maximum header value length in Compact Header Encoding */
-export const CHE_HEADER_VALUE_LENGTH_MAX = CHE_HEADER_VALUE_LENGTH_FIRST_MAX * CHE_BYTE_RANGE + CHE_BYTE_RANGE - 1
+export const CHE_HEADER_VALUE_LENGTH_MAX = (
+    (CHE_HEADER_VALUE_LENGTH_TWO_MAX + 1) +
+    (
+        // The first two digits range from 0 to 46.
+        CHE_HEADER_VALUE_LENGTH_TAGGED_MAX * (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) * (CHE_BYTE_RANGE + 1) +
+        CHE_HEADER_VALUE_LENGTH_TAGGED_MAX * (CHE_BYTE_RANGE + 1) +
+        // The third digit ranges from 0 to 94.
+        CHE_BYTE_RANGE
+    )
+)
 
 /**
  * Read a byte for lengths and header IDs and check if it lies within the allowed bounds for Compact Header Encoding
@@ -75,6 +91,15 @@ function readByte(encoded, i) {
     ok(byte >= CHE_MIN_BYTE, "Byte is less than the minimum allowed value")
     ok(byte <= CHE_MAX_BYTE, "Byte is greater than the maximum allowed value")
     return byte
+}
+
+/**
+ * Decode the underlying value in a tagged value length byte in Compact Header Encoding
+ * @param {number} byte
+ * @return {number}
+ */
+function decodeTaggedValue(byte) {
+    return (byte >> 1 & 0b1111_1110) | (byte & 1)
 }
 
 /**
@@ -106,10 +131,30 @@ export function compactDecode(encoded) {
         }
 
         const valueFirstByte = readByte(encoded, i++) - CHE_MIN_BYTE
-        let valueLength = valueFirstByte >> 1
-        if (valueFirstByte & 1) {
+        let valueLength
+        if (valueFirstByte & 0b0000_0010) {
             const valueSecondByte = readByte(encoded, i++) - CHE_MIN_BYTE
-            valueLength = valueLength * CHE_BYTE_RANGE + valueSecondByte
+            if (valueSecondByte & 0b0000_0010) {
+                const valueThirdByte = readByte(encoded, i++) - CHE_MIN_BYTE
+                valueLength = (
+                    (CHE_HEADER_VALUE_LENGTH_TWO_MAX + 1) +
+                    (
+                        decodeTaggedValue(valueFirstByte) * ((CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) * (CHE_BYTE_RANGE + 1)) +
+                        decodeTaggedValue(valueSecondByte) * (CHE_BYTE_RANGE + 1) +
+                        valueThirdByte
+                    )
+                )
+            } else {
+                valueLength = (
+                    (CHE_HEADER_VALUE_LENGTH_ONE_MAX + 1) +
+                    (
+                        decodeTaggedValue(valueFirstByte) * (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) +
+                        decodeTaggedValue(valueSecondByte)
+                    )
+                )
+            }
+        } else {
+            valueLength = decodeTaggedValue(valueFirstByte)
         }
         const valueEnd = i + valueLength
 
@@ -121,6 +166,16 @@ export function compactDecode(encoded) {
     }
 
     return data
+}
+
+/**
+ * Encode part of a header value length into a tagged byte for Compact Header Encoding
+ * @param {number} value
+ * @param {boolean} next
+ * @return {number}
+ */
+function encodeTaggedValue(value, next) {
+    return (value << 1 & 0b1111_1100) | (value & 1) | (next << 1)
 }
 
 /**
@@ -150,14 +205,63 @@ export function compactEncode(data) {
 
         ok(value.length <= CHE_HEADER_VALUE_LENGTH_MAX, "Header value length exceeds maximum length")
 
-        if (value.length > CHE_HEADER_VALUE_LENGTH_FIRST_MAX) {
-            const valueLengthFirstRaw = ((value.length / CHE_BYTE_RANGE | 0) << 1) | 1
+        /*
+            The following code may seem messy, but it's mostly "place-value" calculations and flag-setting.
+
+            For a visual example, to encode a number between 0 and 999 in base 10:
+            The first digit equals the number modulo 10.
+            The second digit equals the number divided by 10, modulo 10, and floored.
+            The third digit equals the number divided by 100 and floored.
+
+            The following code performs a similar task, but with three different cases:
+            1 byte : xx        | val = xx
+            2 bytes: xx yy     | val = xx * (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) +
+                               |       yy
+            3 bytes: xx yy zz  | val = xx * (CHE_BYTE_RANGE + 1) * (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) +
+                               |       yy * (CHE_BYTE_RANGE + 1) +
+                               |       zz
+
+            Even now, there is further complexity!
+            For the 2-byte and 3-byte cases, the maximum value of the previous case is added to the "actual value".
+            This minor change eliminates redundancy and makes the best use of the extra bytes.
+
+            The first two bytes are tagged using the second bit (starting from the LSB).
+            In other words, the values of tagged bytes are shifted to the left by one, except for the LSB.
+            All of these bytes then have CHE_MIN_BYTE added to them.
+        */
+
+        if (value.length > CHE_HEADER_VALUE_LENGTH_TWO_MAX) {
+            const modifiedLength = value.length - (CHE_HEADER_VALUE_LENGTH_TWO_MAX + 1)
+            const valueLengthFirstRaw = encodeTaggedValue(
+                modifiedLength / ((CHE_BYTE_RANGE + 1) * (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1)) | 0,
+                true
+            )
+            const valueLengthSecondRaw = encodeTaggedValue(
+                (modifiedLength / (CHE_BYTE_RANGE + 1) | 0) % (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1),
+                true
+            )
+            const valueLengthThirdRaw = modifiedLength % (CHE_BYTE_RANGE + 1)
             const valueLengthFirst = CHE_MIN_BYTE + valueLengthFirstRaw
-            const valueLengthSecond = CHE_MIN_BYTE + (value.length % CHE_BYTE_RANGE)
+            const valueLengthSecond = CHE_MIN_BYTE + valueLengthSecondRaw
+            const valueLengthThird = CHE_MIN_BYTE + valueLengthThirdRaw
+            encoded += String.fromCharCode(valueLengthFirst, valueLengthSecond, valueLengthThird)
+        } else if (value.length > CHE_HEADER_VALUE_LENGTH_ONE_MAX) {
+            const modifiedLength = value.length - (CHE_HEADER_VALUE_LENGTH_ONE_MAX + 1)
+            const valueLengthFirstRaw = encodeTaggedValue(
+                modifiedLength / (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) | 0,
+                true
+            )
+            const valueLengthSecondRaw = encodeTaggedValue(
+                modifiedLength % (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1),
+                false
+            )
+            const valueLengthFirst = CHE_MIN_BYTE + valueLengthFirstRaw
+            const valueLengthSecond = CHE_MIN_BYTE + valueLengthSecondRaw
             encoded += String.fromCharCode(valueLengthFirst, valueLengthSecond)
         } else {
-            const valueLength = CHE_MIN_BYTE + (value.length << 1)
-            encoded += String.fromCharCode(valueLength)
+            const valueLengthFirstRaw = encodeTaggedValue(value.length, false)
+            const valueLengthFirst = CHE_MIN_BYTE + valueLengthFirstRaw
+            encoded += String.fromCharCode(valueLengthFirst)
         }
 
         encoded += value

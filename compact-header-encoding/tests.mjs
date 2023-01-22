@@ -18,6 +18,15 @@ ensureUnchanged([
     [42, "69"]
 ])
 
+ensureUnchanged([
+    ["Host", "example.org"],
+    ["Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"]
+])
+
+ensureUnchanged([
+    ["Content-Type", "text/html"],
+])
+
 let i = 0
 let error
 for (;;) {
@@ -31,6 +40,6 @@ for (;;) {
 }
 
 equal(error.message, "Header value length exceeds maximum length", error)
-equal(i, 4465, "Error was thrown on an unexpected header value length")
+equal(i, 212110 + 1, "Error was thrown on an unexpected header value length")
 
 // TODO: More tests
