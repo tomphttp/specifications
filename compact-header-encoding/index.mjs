@@ -35,24 +35,20 @@ const CHE_MIN_BYTE = 0b0010_0000
 /** The maximum byte allowed in lengths and header IDs in Compact Header Encoding */
 const CHE_MAX_BYTE = 0b0111_1110
 
-/** The maximum byte for header name lengths in Compact Header Encoding */
-const CHE_HEADER_NAME_LENGTH_MAX_BYTE = 0b0100_1111
-
-/**
- * The minimum byte for header IDs in Compact Header Encoding
- *
- * Equivalent to {@link CHE_HEADER_NAME_LENGTH_MAX_BYTE} + 1
- */
-const CHE_HEADER_ID_MIN_BYTE = 0b0101_0000
-
 /** The distance between {@link CHE_MIN_BYTE} and {@link CHE_MAX_BYTE} */
 const CHE_BYTE_RANGE = CHE_MAX_BYTE - CHE_MIN_BYTE
 
 /** The maximum header name length in Compact Header Encoding */
-export const CHE_HEADER_NAME_LENGTH_MAX = CHE_HEADER_ID_MIN_BYTE - CHE_MIN_BYTE
+export const CHE_HEADER_NAME_LENGTH_MAX = CHE_BYTE_RANGE + 1
 
 /** The maximum header ID in Compact Header Encoding */
-export const CHE_HEADER_ID_MAX = CHE_MAX_BYTE - CHE_HEADER_ID_MIN_BYTE
+export const CHE_HEADER_ID_MAX = (
+    // We use base 95 math, but the first digit only ranges from 0 to 93 (not 94).
+    // This is because we already reserve CHE_MIN_BYTE for actual name strings.
+    (CHE_MAX_BYTE - (CHE_MIN_BYTE + 1)) * (CHE_BYTE_RANGE + 1) +
+    // The second digit ranges from 0 to 94.
+    (CHE_MAX_BYTE - CHE_MIN_BYTE)
+)
 
 /** The maximum header value length in the first/second length bytes in Compact Header Encoding */
 const CHE_HEADER_VALUE_LENGTH_TAGGED_MAX = (CHE_BYTE_RANGE >> 1 & 0b1111_1110) | (CHE_BYTE_RANGE & 1)
@@ -114,20 +110,26 @@ export function compactDecode(encoded) {
     const data = []
     let i = 1
     while (i < encoded.length) {
-        const nameInfo = readByte(encoded, i++)
+        const nameFirst = readByte(encoded, i++)
+        const nameSecond = readByte(encoded, i++)
         let name
 
-        if (nameInfo <= CHE_HEADER_NAME_LENGTH_MAX_BYTE) {
+        if (nameFirst === CHE_MIN_BYTE) {
             // Name lengths range from 1 to 48, inclusive
-            const nameLength = nameInfo - CHE_MIN_BYTE + 1
+            const nameLength = nameSecond - CHE_MIN_BYTE + 1
             const nameEnd = i + nameLength
 
             ok(nameEnd <= encoded.length, "End of header name exceeds the string length")
             name = encoded.slice(i, nameEnd)
             i = nameEnd
         } else {
-            // IDs range from 0 to 46, inclusive
-            name = nameInfo - CHE_HEADER_ID_MIN_BYTE
+            // IDs are base 95 numbers.
+            // The first digit ranges from 0 to 93, not 94, since CHE_MIN_BYTE is already used above.
+            // The second digit ranges from 0 to 94 as expected.
+            name = (
+                (nameFirst - (CHE_MIN_BYTE + 1)) * (CHE_BYTE_RANGE + 1) +
+                (nameSecond - CHE_MIN_BYTE)
+            )
         }
 
         const valueFirstByte = readByte(encoded, i++) - CHE_MIN_BYTE
@@ -190,13 +192,18 @@ export function compactEncode(data) {
             case "string": {
                 ok(name.length, "Header name must not be empty")
                 ok(name.length <= CHE_HEADER_NAME_LENGTH_MAX, "Header name length exceeds maximum length")
-                encoded += String.fromCharCode(CHE_MIN_BYTE + name.length - 1)
+                encoded += String.fromCharCode(CHE_MIN_BYTE, (CHE_MIN_BYTE - 1) + name.length)
                 encoded += name
                 break
             }
             case "number": {
+                // The following code is a much simpler version of the upcoming value length calculations.
                 ok(name <= CHE_HEADER_ID_MAX, "Header ID exceeds maximum ID")
-                encoded += String.fromCharCode(CHE_HEADER_ID_MIN_BYTE + name)
+                const nameFirstRaw = name / (CHE_BYTE_RANGE + 1) | 0
+                const nameSecondRaw = name % (CHE_BYTE_RANGE + 1) | 0
+                const nameFirst = (CHE_MIN_BYTE + 1) + nameFirstRaw
+                const nameSecond = CHE_MIN_BYTE + nameSecondRaw
+                encoded += String.fromCharCode(nameFirst, nameSecond)
                 break
             }
             default: {
