@@ -188,6 +188,7 @@ export function compactEncode(data) {
     for (const [name, value] of data) {
         switch (typeof name) {
             case "string": {
+                ok(name.length, "Header name must not be empty")
                 ok(name.length <= CHE_HEADER_NAME_LENGTH_MAX, "Header name length exceeds maximum length")
                 encoded += String.fromCharCode(CHE_MIN_BYTE + name.length - 1)
                 encoded += name
