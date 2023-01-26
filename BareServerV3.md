@@ -16,27 +16,7 @@ X-Bare-Headers uses Compact Header Encoding, a new encoding designed to improve 
 See the [specification and reference implementation](./compact-header-encoding/) for further information.
 
 Compact Header Encoding uses a dictionary of 47 IDs numbered from 0 to 46 inclusive.
-The dictionaries used in requests and responses are listed below:
-
-### Requests
-
-| Index |    0   |    1   |    2   |    3   |    4   |    5   |    6   |    7   |    8   |    9   |
-| ----- | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-|   0   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   1   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   2   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   3   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   4   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | ------ | ------ | ------ |
-
-### Responses
-
-| Index |    0   |    1   |    2   |    3   |    4   |    5   |    6   |    7   |    8   |    9   |
-| ----- | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-|   0   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   1   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   2   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   3   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-|   4   | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | ------ | ------ | ------ |
+The dictionaries used in requests and responses shall be assigned in [this file](./BareHeaderDictionaries.md).
 
 ## Forbidden values
 
@@ -55,7 +35,7 @@ Example:
 X-Bare-Port: 80
 X-Bare-Protocol: http:
 X-Bare-Path: /index.php
-X-Bare-Headers: ;#Host5example.org%Accept#\text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+X-Bare-Headers: ; #Host5example.org %Accept#\text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
 ```
 
 - X-Bare-Port: The port of the destination. This must be a valid number and cannot be empty. An example of logic the client must do is: `const port = protocol == "http:" ? 80 : 443;`
@@ -75,7 +55,7 @@ Content-Encoding: ...
 Content-Length: ...
 X-Bare-Status: 200
 X-Bare-Status-text: OK
-X-Bare-Headers: ;+Content-Type1text/html
+X-Bare-Headers: ; +Content-Type1text/html
 ```
 
 - Content-Encoding: The remote body's content encoding.
