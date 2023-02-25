@@ -104,7 +104,7 @@ function decodeTaggedValue(byte) {
  * @return {HeaderData}
  */
 export function compactDecode(encoded) {
-    ok(encoded.length >= 1, "Encoded string must contain at least one character")
+    ok(encoded.length, "Encoded string must not be empty")
     equal(encoded[0], ";", "Encoded string must begin with a semicolon")
 
     const data = []
