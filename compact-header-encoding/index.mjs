@@ -245,10 +245,10 @@ export function compactEncode(data) {
                 true
             )
             const valueLengthSecondRaw = encodeTaggedValue(
-                (modifiedLength / (CHE_BYTE_RANGE + 1) | 0) % (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1),
+                (modifiedLength / (CHE_BYTE_RANGE + 1) | 0) % (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) | 0,
                 true
             )
-            const valueLengthThirdRaw = modifiedLength % (CHE_BYTE_RANGE + 1)
+            const valueLengthThirdRaw = modifiedLength % (CHE_BYTE_RANGE + 1) | 0
             const valueLengthFirst = CHE_MIN_BYTE + valueLengthFirstRaw
             const valueLengthSecond = CHE_MIN_BYTE + valueLengthSecondRaw
             const valueLengthThird = CHE_MIN_BYTE + valueLengthThirdRaw
@@ -260,7 +260,7 @@ export function compactEncode(data) {
                 true
             )
             const valueLengthSecondRaw = encodeTaggedValue(
-                modifiedLength % (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1),
+                modifiedLength % (CHE_HEADER_VALUE_LENGTH_TAGGED_MAX + 1) | 0,
                 false
             )
             const valueLengthFirst = CHE_MIN_BYTE + valueLengthFirstRaw
