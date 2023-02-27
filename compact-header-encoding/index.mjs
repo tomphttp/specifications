@@ -2,7 +2,7 @@
  * @file Compact Header Encoding reference implemenation
  * @author CountBleck <Mr.YouKnowWhoIAm@protonmail.com>
  * @license
- * Copyright (c) 2022 CountBleck
+ * Copyright (c) 2023 CountBleck
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
