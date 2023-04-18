@@ -168,7 +168,7 @@ Sec-WebSocket-Protocol: The protocol is the meta ID.
 
 Response Body:
 
-The response is a stream, forwading bytes from the remote to the client. Once either the remote or client close, the remote and client will close.
+The response is a stream, forwarding bytes from the remote to the client. Once either the remote or client close, the remote and client will close.
 
 ## Receive metadata for a specific WebSocket
 
