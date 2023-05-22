@@ -30,6 +30,8 @@ The receiver should iterate over the headers, sort by ID, then combine all the v
 
 ## Forbidden values
 
+These headers should be ignored if they're received by the server.
+
 X-Bare-Forward-Headers:
 
 `connection`, `transfer-encoding`, `host`, `connection`, `origin`, `referer`
@@ -65,6 +67,7 @@ Cache:
 ## Bare Request Headers
 
 Example:
+
 ```
 X-Bare-Port: 80
 X-Bare-Protocol: http:
@@ -100,9 +103,9 @@ X-Bare-Headers: {"Content-Type": "text/html"}
 
 ## Send and receive data from a remote
 
-| Method | Endpoint   |
-| ------ | ---------- |
-| `*`    | /          |
+| Method | Endpoint |
+| ------ | -------- |
+| `*`    | /        |
 
 Request Body:
 
@@ -129,6 +132,7 @@ Request headers are almost identical to `/` with the exception of protocol.
 See [Bare Request Headers](#bare-request-headers)
 
 Example:
+
 ```
 X-Bare-Host: example.org
 X-Bare-Port: 80
@@ -145,7 +149,7 @@ Content-Type: text/plain
 
 Response Body:
 
-A random WebSocket-protocol-safe character sequence used to identify the WebSocket and it's metadata. 
+A random WebSocket-protocol-safe character sequence used to identify the WebSocket and it's metadata.
 
 ```
 ABDCFE009023
@@ -153,9 +157,9 @@ ABDCFE009023
 
 ## Create a WebSocket tunnel to a remote
 
-| Method | Endpoint  |
-| ------ | --------- |
-| `GET`  | /         |
+| Method | Endpoint |
+| ------ | -------- |
+| `GET`  | /        |
 
 Request Headers:
 
@@ -164,7 +168,7 @@ Upgrade: websocket
 Sec-WebSocket-Protocol: bare, ...
 ```
 
-Sec-WebSocket-Protocol: The protocol is the meta ID. 
+Sec-WebSocket-Protocol: The protocol is the meta ID.
 
 Response Body:
 
