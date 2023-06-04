@@ -1,8 +1,8 @@
-# Bare Server v3 Endpoints
+# Bare Server v4 Endpoints
 
 All endpoints are prefixed with `/v{version}/`
 
-The endpoint `/` on v3 would be `/v3/`
+The endpoint `/` on v4 would be `/v4/`
 
 ## Compact Header Encoding
 
