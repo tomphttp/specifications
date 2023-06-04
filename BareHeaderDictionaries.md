@@ -1,6 +1,6 @@
 # Bare Header Dictionaries
 
-These dictionaries are used in Bare v3 in conjunction with Compact Header Encoding.
+These dictionaries are used in Bare v4 in conjunction with Compact Header Encoding.
 
 # Requests
 

@@ -1,8 +1,8 @@
-# Bare Server v3 Endpoints
+# Bare Server v4 Endpoints
 
 All endpoints are prefixed with `/v{version}/`
 
-The endpoint `/` on v3 would be `/v3/`
+The endpoint `/` on v4 would be `/v4/`
 
 ## Compact Header Encoding
 
@@ -100,3 +100,7 @@ Handshake:
 3. The client must close the connection upon receiving invalid data.
 4. The WebSocket connection is now open for the proxied application.
 5. Any message or closure from one connection is sent or applied respectively to the other.
+
+Note:
+* If at least 10 seconds have passed waiting for step 1 to be completed by the client, the server *may* close the connection.
+* If at least 10 seconds have passed waiting for step 2 to be completed by the server, the client *may* close the connection.
