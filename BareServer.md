@@ -6,13 +6,15 @@ Bare Servers can run on directories. For example, if the directory was `/bare/` 
 
 - [Errors](./BareServerErrors.md)
 - [V1 Endpoints](./BareServerV1.md)
-- [V2 Endpoints](./BareServerV2.md)
+- [V2 Endpoints](./BareServerV2.md))
+- [V3 Endpoints](./BareServerV3.md)
 
 # Considerations when running an implementation under NGINX, Apache2, or Lighttpd
 
 Due to the nature of header values being large, you must configure your web server to allow these large headers.
 
 NGINX:
+
 ```
 server {
 	# ...
@@ -34,9 +36,9 @@ server {
 
 ## Request server info
 
-| Method | Endpoint  |
-| ------ | --------- |
-| `GET`  | /         |
+| Method | Endpoint |
+| ------ | -------- |
+| `GET`  | /        |
 
 This endpoint is not subject to change. It will remain the same across versions.
 
@@ -50,39 +52,36 @@ Response Body:
 
 ```json
 {
-	"versions": [
-		"v1",
-		"v2"
-	],
-	"language": "NodeJS",
-	"memoryUsage": 1.04,
-	"maintainer": {
-		"email": "maintenance@example.org",
-		"website": "https://projects.example.org/"
-	},
-	"project": {
-		"name": "Project",
-		"description": "Unique TOMP implementation",
-		"email": "development@example.org",
-		"website": "https://git.example.org/",
-		"repository": "https://git.example.org/dev/project.git",
-		"version": "1.0.0"
-	}
+  "versions": ["v1", "v2"],
+  "language": "NodeJS",
+  "memoryUsage": 1.04,
+  "maintainer": {
+    "email": "maintenance@example.org",
+    "website": "https://projects.example.org/"
+  },
+  "project": {
+    "name": "Project",
+    "description": "Unique TOMP implementation",
+    "email": "development@example.org",
+    "website": "https://git.example.org/",
+    "repository": "https://git.example.org/dev/project.git",
+    "version": "1.0.0"
+  }
 }
 ```
 
 A ? after the property indicates it's optional.
 
 - maintainer {Object}?
-	- email {String}?
-	- website {String}?
+  - email {String}?
+  - website {String}?
 - project {Object}?: The project's information.
-	- name {String}?
-	- description {String}?
-	- email {String}?
-	- website {String}?
-	- repository {String}?: A link to the project's .git file.
-	- version {String}?: The [semver](https://semver.org/) version number of this project's backend.
+  - name {String}?
+  - description {String}?
+  - email {String}?
+  - website {String}?
+  - repository {String}?: A link to the project's .git file.
+  - version {String}?: The [semver](https://semver.org/) version number of this project's backend.
 - versions {Array{String}}: A list of version names this server supports. (resolvable to http://server/versionName/)
 - language {String{NodeJS,Deno,Bun,ServiceWorker,Java,PHP,Rust,C,C++,C#,Ruby,Go,Crystal,Shell}}: The runtime. "language" is kept for legacy purposes.
 - memoryUsage {Number}?: The memory used by the server in base MB.
@@ -90,5 +89,5 @@ A ? after the property indicates it's optional.
 In NodeJS, memoryUsage should be calculated by:
 
 ```js
-Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100
+Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100;
 ```
