@@ -4,41 +4,24 @@ All endpoints are prefixed with `/v{version}/`
 
 The endpoint `/` on v3 would be `/v3/`
 
+This is an extension of [V2](./BareServerV2.md).
+
+## Endpoints dropped from V2
+
+- `/ws-new-meta`
+- `/ws-meta`
+
 ## Header Lists
 
-Bare Server v3 adapts header lists.
-
-See [RFC 8941: Structured Field Values for HTTP](https://www.rfc-editor.org/rfc/rfc8941.html#section-3.1)
+See [V2 Header Lists](./BareServerV2.md#header-lists)
 
 ## Split Headers
 
-See implementation at https://github.com/tomphttp/bare-server-node/blob/master/splitHeaderUtil.js
-
-Due to very popular webservers forbidding very long header values, headers on v3 will be split. If x header value is over **3072** Bytes (3.5 KB), **do not expect a response from the server**. If the server receives the large header, it will send a a [`INVALID_BARE_HEADER`](./BareServerErrors.md) error. If the server doesn't receive the header, the response may vary in status codes depending on the server.
-
-Currently, header splitting only applies to X-Bare-Headers. Headers are split in both requests and responses. Split headers IDs begin from 0. A split header name looks like X-Bare-Split-ID. Every split value must begin with a semicolon, otherwise whitespace may be lost.
-
-Example:
-
-```
-X-Bare-Headers-0: ;{"accept":"*/*","host":"example.com","sec-ch-ua":"\"(Not(A:Brand\";v=\"8\", \"Chromium\";v=\"100\""
-X-bare-Headers-1: ;,"sec-ch-ua-mobile":"?0","sec-ch-ua-platform":"\"Linux\"","user-agent":"Mozilla/5.0 (X11; Linux x8
-X-Bare-Headers-2: ;6_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4890.0 Safari/537.36"}
-```
-
-The receiver should iterate over the headers, sort by ID, then combine all the values into the target header.
+See [V2 Split Headers](./BareServerV2.md#split-headers)
 
 ## Forbidden values
 
-These headers should be ignored if they're received by the server.
-
-X-Bare-Forward-Headers:
-
-`connection`, `transfer-encoding`, `host`, `connection`, `origin`, `referer`
-
-X-Bare-Pass-Headers:
-
-`vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`
+See [V2 Forbidden values](./BareServerV2.md#forbidden-values)
 
 ## Default values
 
@@ -52,7 +35,9 @@ Cache:
 
 X-Bare-Forward-Headers:
 
-`accept-encoding`, `accept-language`, `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
+Forwarded headers dropped from V2: `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
+
+`accept-encoding`, `accept-language`
 
 Cache:
 
@@ -66,18 +51,21 @@ Cache:
 
 ## Bare Request Headers
 
+Headers dropped from V2:
+
+- X-Bare-Host
+- X-Bare-Port
+- X-Bare-Protocol
+- X-Bare-Path
+
 Example:
 
 ```
-X-Bare-Port: 80
-X-Bare-Protocol: http:
-X-Bare-Path: /index.php
-X-Bare-Headers: {"Host":"example.org","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
+X-Bare-URL: http://example.org/index.php
+X-Bare-Headers: {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
 ```
 
-- X-Bare-Port: The port of the destination. This must be a valid number and cannot be empty. An example of logic the client must do is: `const short port = protocol == "http:" ? 80 : 443;`
-- X-Bare-Protocol: The protocol the server will use when creating a request. Valid values are: `http:`, `https:`
-- X-Bare-Path: The server request path.
+- X-Bare-URL: A URL to the destination in accordance with [RFC1738](https://www.rfc-editor.org/rfc/rfc1738). Only accepted protocols are: `http:` and `https:`.
 - X-Bare-Headers: A JSON-serialized object containing the server request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
 - **Optional:** X-Bare-Forward-Headers: A [list](#header-lists) of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, the client should specify `Accept` as a forwarded header.
 - **Optional:** X-Bare-Pass-Headers: A [list](#header-lists) of case-insensitive headers. If these headers are present in the remote response, the values will be added to the server response.
@@ -121,40 +109,6 @@ Response Body:
 
 The remote's response body will be sent as the response body.
 
-## Request a new WebSocket ID
-
-Request headers are almost identical to `/` with the exception of protocol.
-
-| Method | Endpoint     |
-| ------ | ------------ |
-| `GET`  | /ws-new-meta |
-
-See [Bare Request Headers](#bare-request-headers)
-
-Example:
-
-```
-X-Bare-Host: example.org
-X-Bare-Port: 80
-X-Bare-Protocol: ws:
-X-Bare-Path: /websocket
-X-Bare-Headers: {"Host":"example.org","Upgrade":"WebSocket","Origin":"http://example.org","Connection":"upgrade"}
-```
-
-Response Headers:
-
-```
-Content-Type: text/plain
-```
-
-Response Body:
-
-A random WebSocket-protocol-safe character sequence used to identify the WebSocket and it's metadata.
-
-```
-ABDCFE009023
-```
-
 ## Create a WebSocket tunnel to a remote
 
 | Method | Endpoint |
@@ -165,33 +119,75 @@ Request Headers:
 
 ```
 Upgrade: websocket
-Sec-WebSocket-Protocol: bare, ...
 ```
-
-Sec-WebSocket-Protocol: The protocol is the meta ID.
 
 Response Body:
 
-The response is a stream, forwading bytes from the remote to the client. Once either the remote or client close, the remote and client will close.
+The response is a WebSocket. The server will accept the WebSocket and begin doing a handshake.
 
-## Receive metadata for a specific WebSocket
+A handshake will look like this:
 
-| Method | Endpoint |
-| ------ | -------- |
-| `GET`  | /ws-meta |
+1. The client will inform the server of the destination it wants to connect to and provide request headers and headers to forward.
 
-Request Headers:
+   ```json
+   {
+     "type": "connect",
+     "remote": "ws://localhost:8000/ws",
+     "protocols": [],
+     "headers": {
+       "Origin": "http://localhost:8000",
+       "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+       "Host": "localhost:8000",
+       "Pragma": "no-cache",
+       "Cache-Control": "no-cache",
+       "Upgrade": "websocket",
+       "Connection": "Upgrade"
+     },
+     "forwardHeaders": []
+   }
+   ```
 
-```
-X-Bare-ID: UniqueID_123
-```
+   This message must be sent as a text frame, not binary data. Any other type of WebSocket frame is considered invalid and the server should terminate the connection.
 
-- X-Bare-ID: The unique ID returned by the server in the pre-request.
+   - `type`: The type of message. Only accepted value is `"connect"`.
+   - `remote`: A WebSocket URL to the destination in accordance with [RFC1738](https://www.rfc-editor.org/rfc/rfc1738). Only accepted protocols are: `ws:` and `wss:`
+   - `protocols`: A string array of all the protocols that the client supports.
+   - `headers`: An object containing the server request headers. See X-Bare-Headers in [Bare Request Headers](#bare-request-headers).
+   - `forwardHeaders`: A string array containing all the headers to forward from the request to the remote. See X-Bare-Forward-Headers in [Bare Request Headers](#bare-request-headers).
 
-> ⚠ All WebSocket metadata is cleared after requesting the metadata or 30 seconds after the connection was established.
+   > If this message is not received after an amount of time (determined by the implementation), the connection may be terminated by the server.
 
-An expired or invalid X-Bare-ID will result in a 400 status code.
+   > The server must terminate the connection if this message contains invalid JSON/is invalid (eg. type isn't "connect" or the types don't validate)
 
-Response Headers:
+2. The server will establish a connection to the remote based on the values sent by the client in #1.
 
-See [Bare Response Headers](#bare-response-headers)
+3. Once established, the server will send a message to the client informing it that it's now open.
+
+   ```json
+   {
+     "type": "open",
+     "protocol": "",
+     "setCookies": []
+   }
+   ```
+
+   - `type`: The type of message. Only accepted value is `"open"`.
+   - `protocol`: The accepted protocol.
+   - `headers`: An object containing the server request headers. See X-Bare-Headers in [Bare Request Headers](#bare-request-headers).
+   - `forwardHeaders`: A string array containing all the headers to forward from the request to the remote. See X-Bare-Forward-Headers in [Bare Request Headers](#bare-request-headers).
+
+4. **Pipe mode**
+
+   Once the server has sent the "open" message to the client, it will begin forwarding messages from the destination back to the client. No acknowledgement is required because the server should be sending messages in order until it's at this stage.
+
+   Closing:
+
+   - When the destination WebSocket is closed, the server will close the client WebSocket. Close codes are ignored.
+   - When the client WebSocket is closed, the server will close the destination WebSocket. Close codes are ignored.
+
+   Messages:
+
+   Message types must be preserved. If text is sent to the server, text will be sent to the client. If binary data is sent to the server, binary data will be sent to the client. Visa versa.
+
+   - When the destination WebSocket sends a message to the server, the server will send the message to the client.
+   - When the client WebSocket sends a message to the server, the server will send the message to the destination.
