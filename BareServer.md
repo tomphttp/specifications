@@ -6,7 +6,7 @@ Bare Servers can run on directories. For example, if the directory was `/bare/` 
 
 - [Errors](./BareServerErrors.md)
 - [V1 Endpoints](./BareServerV1.md)
-- [V2 Endpoints](./BareServerV2.md))
+- [V2 Endpoints](./BareServerV2.md)
 - [V3 Endpoints](./BareServerV3.md)
 
 # Considerations when running an implementation under NGINX, Apache2, or Lighttpd
