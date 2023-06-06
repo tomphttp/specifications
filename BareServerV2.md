@@ -28,41 +28,60 @@ X-Bare-Headers-2: ;6_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.489
 
 The receiver should iterate over the headers, sort by ID, then combine all the values into the target header.
 
-## Forbidden values
+## Forbidden Values
 
 These headers should be ignored if they're received by the server.
 
-X-Bare-Forward-Headers:
+- X-Bare-Forward-Headers:
+  `connection`, `transfer-encoding`, `host`, `connection`, `origin`, `referer`
 
-`connection`, `transfer-encoding`, `host`, `connection`, `origin`, `referer`
+- X-Bare-Pass-Headers:
 
-X-Bare-Pass-Headers:
+  `vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`
 
-`vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`
+## Base values
 
-## Default values
+All headers here are the base values. If a request specifies any of these headers, their value will add onto the base values (depending on if caching is enabled).
 
-Cache: If the query key `cache` is passed to any request endpoint, cache will be enabled. An effective query key value is a checksum of the protocol, host, port, and path. Any value is accepted.
+> Cache: If the query key `cache` is passed to any request endpoint, cache will be enabled. An effective query key value is a checksum of the protocol, host, port, and path. Any value is accepted.
 
-X-Bare-Pass-Headers:
+- X-Bare-Pass-Headers:
 
-Cache:
+  Value: none
 
-`last-modified`, `etag`, `cache-control`
+  Value with caching: `last-modified`, `etag`, `cache-control`
 
-X-Bare-Forward-Headers:
+- X-Bare-Forward-Headers:
 
-`accept-encoding`, `accept-language`, `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
+  Value: `accept-encoding`, `accept-language`, `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
 
-Cache:
+  Value with caching: `accept-encoding`, `accept-language`, `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`, `if-modified-since`, `if-none-match`, `cache-control`
 
-`if-modified-since`, `if-none-match`, `cache-control`
+- X-Bare-Pass-Status:
 
-X-Bare-Pass-Status:
+  Value: none
 
-Cache:
+  Value with caching: `304`
 
-`304`
+### Base Values Example
+
+A request passes this header:
+
+```
+X-Bare-Forward-Headers: x-test
+```
+
+The server will process X-Bare-Forward-Headers with the base values + what the request specified:
+
+```
+X-Bare-Forward-Headers: accept-encoding, accept-language, sec-websocket-extensions, sec-websocket-key, sec-websocket-version, x-test
+```
+
+If the request used caching, it would also include the headers for caching:
+
+```
+X-Bare-Forward-Headers: accept-encoding, accept-language, sec-websocket-extensions, sec-websocket-key, sec-websocket-version, if-modified-since, if-none-match, cache-control, x-test
+```
 
 ## Bare Request Headers
 

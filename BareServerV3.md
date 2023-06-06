@@ -19,44 +19,45 @@ See [V2 Header Lists](./BareServerV2.md#header-lists)
 
 See [V2 Split Headers](./BareServerV2.md#split-headers)
 
-## Forbidden values
+## Forbidden Values
 
-See [V2 Forbidden values](./BareServerV2.md#forbidden-values)
+See [V2 Forbidden Values](./BareServerV2.md#forbidden-values)
 
-## Default values
+## Base Values
 
-Cache: If the query key `cache` is passed to any request endpoint, cache will be enabled. An effective query key value is a checksum of the protocol, host, port, and path. Any value is accepted.
+All headers here are the base values. If a request specifies any of these headers, their value will add onto the base values (depending on if caching is enabled).
 
-X-Bare-Pass-Headers:
+> Cache: If the query key `cache` is passed to any request endpoint, cache will be enabled. An effective query key value is a checksum of the protocol, host, port, and path. Any value is accepted.
 
-Cache:
+- X-Bare-Pass-Headers:
 
-`last-modified`, `etag`, `cache-control`
+  Value: none
 
-X-Bare-Forward-Headers:
+  Value with caching: `last-modified`, `etag`, `cache-control`
 
-Forwarded headers dropped from V2: `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
+- X-Bare-Forward-Headers:
 
-`accept-encoding`, `accept-language`
+  Headers dropped from V2: `sec-websocket-extensions`, `sec-websocket-key`, `sec-websocket-version`
 
-Cache:
+  Value: `accept-encoding`, `accept-language`
 
-`if-modified-since`, `if-none-match`, `cache-control`
+  Value with caching: `accept-encoding`, `accept-language`, `if-modified-since`, `if-none-match`, `cache-control`
 
-X-Bare-Pass-Status:
+- X-Bare-Pass-Status:
 
-Cache:
+  Value: none
 
-`304`
+  Value with caching: `304`
+
+### Example
+
+See [V2 Base Values Example](./BareServerV2.md#base-values-example)
 
 ## Bare Request Headers
 
-Headers dropped from V2:
+Headers dropped from V2: X-Bare-Host, X-Bare-Port, X-Bare-Protocol, X-Bare-Path
 
-- X-Bare-Host
-- X-Bare-Port
-- X-Bare-Protocol
-- X-Bare-Path
+These headers have been replaced with X-Bare-URL
 
 Example:
 
