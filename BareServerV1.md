@@ -6,9 +6,9 @@ The endpoint `/` on V1 would be `/v1/`
 
 ## Request the server to fetch a URL from the remote.
 
-| Method | Endpoint   |
-| ------ | ---------- |
-| `*`    | /       |
+| Method | Endpoint |
+| ------ | -------- |
+| `*`    | /        |
 
 Request Body:
 
@@ -37,7 +37,7 @@ The headers below are required. Not specifying a header will result in a 400 sta
 The headers below are optional and will default to `[]` if they are not specified. They are intended to be used for caching purposes.
 
 - X-Bare-Pass-Headers: A JSON-serialized array of case-insensitive headers. If these headers are present in the remote response, the values will be added to the server response.
-The list must not include the following: `vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`.
+  The list must not include the following: `vary`, `connection`, `transfer-encoding`, `access-control-allow-headers`, `access-control-allow-methods`, `access-control-expose-headers`, `access-control-max-age`, `access-control-request-headers`, `access-control-request-method`.
 - X-Bare-Pass-Status: A JSON-serialized array of HTTP status codes, like 204 and 304. If the remote response status code is present in this list, the server response status will be set to the remote response status.
 
 Response Headers:
@@ -60,7 +60,7 @@ Response Body:
 
 The remote's response body will be sent as the response body.
 
-A random character sequence used to identify the WebSocket and it's metadata. 
+A random character sequence used to identify the WebSocket and it's metadata.
 
 ## Request a new WebSocket ID.
 
@@ -84,9 +84,9 @@ ABDCFE009023
 
 ## Request the server to create a WebSocket tunnel to the remote.
 
-| Method | Endpoint  |
-| ------ | --------- |
-| `GET`  | /         |
+| Method | Endpoint |
+| ------ | -------- |
+| `GET`  | /        |
 
 Request Headers:
 
@@ -101,24 +101,24 @@ The JSON object looks like:
 
 ```json
 {
-	"remote": {
-		"host": "example.org",
-		"port": 80,
-		"path": "/ws-path",
-		"protocol": "ws:"
-	},
-	"headers": {
-		"Origin": "http://example.org",
-		"Sec-WebSocket-Protocol": "original_websocket_protocol"
-	},
-	"forward_headers": [
-		"accept-encoding",
-		"accept-language",
-		"sec-websocket-extensions",
-		"sec-websocket-key",
-		"sec-websocket-version"
-	],
-	"id": "UniqueID_123"
+  "remote": {
+    "host": "example.org",
+    "port": 80,
+    "path": "/ws-path",
+    "protocol": "ws:"
+  },
+  "headers": {
+    "Origin": "http://example.org",
+    "Sec-WebSocket-Protocol": "original_websocket_protocol"
+  },
+  "forward_headers": [
+    "accept-encoding",
+    "accept-language",
+    "sec-websocket-extensions",
+    "sec-websocket-key",
+    "sec-websocket-version"
+  ],
+  "id": "UniqueID_123"
 }
 ```
 
@@ -173,12 +173,9 @@ Response Body:
 
 ```json
 {
-	"headers": {
-		"Set-Cookie": [
-			"Cookie",
-			"Cookie"
-		],
-		"Sec-WebSocket-Accept": "original_websocket_protocol"
-	}
+  "headers": {
+    "Set-Cookie": ["Cookie", "Cookie"],
+    "Sec-WebSocket-Accept": "original_websocket_protocol"
+  }
 }
 ```
