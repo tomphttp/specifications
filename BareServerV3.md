@@ -174,8 +174,7 @@ A handshake will look like this:
 
    - `type`: The type of message. Only accepted value is `"open"`.
    - `protocol`: The accepted protocol.
-   - `headers`: An object containing the server request headers. See X-Bare-Headers in [Bare Request Headers](#bare-request-headers).
-   - `forwardHeaders`: A string array containing all the headers to forward from the request to the remote. See X-Bare-Forward-Headers in [Bare Request Headers](#bare-request-headers).
+   - `setCookies`: A string array containing all the `set-cookie` headers sent by the remote. If there's no headers, this array is empty. If there's one, this array has one element. If there's multiple, this array has multiple elements.
 
 4. **Pipe mode**
 
