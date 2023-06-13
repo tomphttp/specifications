@@ -67,7 +67,7 @@ X-Bare-Headers: {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9
 ```
 
 - X-Bare-URL: A URL to the destination in accordance with [RFC1738](https://www.rfc-editor.org/rfc/rfc1738). Only accepted protocols are: `http:` and `https:`.
-- X-Bare-Headers: A JSON-serialized object containing the server request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser.
+- X-Bare-Headers: A JSON-serialized object containing the server request headers. Request header names may be capitalized. When making the request to the remote, capitalization is kept. Consider the header capitalization on `HTTP/1.0` and `HTTP/1.1`. Sites such as Discord check for header capitalization to make sure the client is a web browser. Headers correspond to this TypeScript type: `Record<string, string | string[]>`.
 - **Optional:** X-Bare-Forward-Headers: A [list](#header-lists) of case-insensitive request headers to forward to the remote. For example, if the client's useragent automatically specified the `Accept` header and the client can't retrieve this header, the client should specify `Accept` as a forwarded header.
 - **Optional:** X-Bare-Pass-Headers: A [list](#header-lists) of case-insensitive headers. If these headers are present in the remote response, the values will be added to the server response.
 - **Optional:** X-Bare-Pass-Status: A [list](#header-lists) of HTTP status codes. If the remote response status code is present in this list, the server response status will be set to the remote response status.
