@@ -31,9 +31,9 @@ All headers here are the base values. If a request specifies any of these header
 
 - X-Bare-Pass-Headers:
 
-  Value: none
+  Value: `content-encoding`, `content-length`, `last-modified`
 
-  Value with caching: `last-modified`, `etag`, `cache-control`
+  Value with caching: `content-encoding`, `content-length`, `last-modified`, `if-modified-since`, `if-none-match`, `cache-control`
 
 - X-Bare-Forward-Headers:
 
