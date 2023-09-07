@@ -115,7 +115,7 @@ X-Bare-Headers: {"Content-Type": "text/html"}
 ```
 
 - Content-Encoding: The remote body's content encoding.
-- Content-Encoding: The remote body's content length.
+- Content-Length: The remote body's content length.
 - X-Bare-Status: The status code of the remote.
 - X-Bare-Status-Text: The status text of the remote.
 - X-Bare-Headers: A JSON-serialized object containing remote response headers. Response headers may be capitalized if the remote sent any capitalized headers.
