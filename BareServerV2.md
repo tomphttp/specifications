@@ -88,12 +88,14 @@ X-Bare-Forward-Headers: accept-encoding, accept-language, sec-websocket-extensio
 Example:
 
 ```
+X-Bare-Host: example.org
 X-Bare-Port: 80
 X-Bare-Protocol: http:
 X-Bare-Path: /index.php
 X-Bare-Headers: {"Host":"example.org","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
 ```
 
+- X-Bare-Host: The host of the destination WITHOUT the port. This would be equivalent to URL.hostname in JavaScript.
 - X-Bare-Port: The port of the destination. This must be a valid number and cannot be empty. An example of logic the client must do is: `const short port = protocol == "http:" ? 80 : 443;`
 - X-Bare-Protocol: The protocol the server will use when creating a request. Valid values are: `http:`, `https:`
 - X-Bare-Path: The server request path.
