@@ -47,9 +47,9 @@ All headers here are the base values. If a request specifies any of these header
 
 - X-Bare-Pass-Headers:
 
-  Value: none
+  Value: `content-encoding`, `content-length`, `last-modified`
 
-  Value with caching: `last-modified`, `etag`, `cache-control`
+  Value with caching: `content-encoding`, `content-length`, `last-modified`, `cache-control`, `etag`
 
 - X-Bare-Forward-Headers:
 
@@ -88,12 +88,14 @@ X-Bare-Forward-Headers: accept-encoding, accept-language, sec-websocket-extensio
 Example:
 
 ```
+X-Bare-Host: example.org
 X-Bare-Port: 80
 X-Bare-Protocol: http:
 X-Bare-Path: /index.php
 X-Bare-Headers: {"Host":"example.org","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
 ```
 
+- X-Bare-Host: The host of the destination WITHOUT the port. This would be equivalent to URL.hostname in JavaScript.
 - X-Bare-Port: The port of the destination. This must be a valid number and cannot be empty. An example of logic the client must do is: `const short port = protocol == "http:" ? 80 : 443;`
 - X-Bare-Protocol: The protocol the server will use when creating a request. Valid values are: `http:`, `https:`
 - X-Bare-Path: The server request path.
@@ -115,7 +117,7 @@ X-Bare-Headers: {"Content-Type": "text/html"}
 ```
 
 - Content-Encoding: The remote body's content encoding.
-- Content-Encoding: The remote body's content length.
+- Content-Length: The remote body's content length.
 - X-Bare-Status: The status code of the remote.
 - X-Bare-Status-Text: The status text of the remote.
 - X-Bare-Headers: A JSON-serialized object containing remote response headers. Response headers may be capitalized if the remote sent any capitalized headers.
