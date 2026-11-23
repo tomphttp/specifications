@@ -18,6 +18,8 @@ Creating specifications allows for productivity. One developer can implement the
 
 [WebSocket Protocol](./WebSocketProtocol.md)
 
+[Wisp over WebTransport](./WispOverWebTransport.md)
+
 ## Planning
 
 Although we take issues and pull requests, a lot of planning for new specifications happens in our [Discord server](https://discord.gg/UfETkrJBtT).
